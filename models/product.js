@@ -1,48 +1,62 @@
-const products = [
-    {id: "13213", name: 'Samsung', price: '2000', imageUrl: 'yeni.jpeg', description: 'iyi telefon', categoryid: "1"},
-    {id: "13214", name: 'Samsung s9', price: '2000', imageUrl: 'yeni.jpeg', description: 'iyi telefon', categoryid: "1"},
-    {id: "13215", name: 'Samsung s8', price: '2000', imageUrl: 'yeni.jpeg', description: 'iyi telefon', categoryid: "1"},
-    {id: "13216", name: 'Laptop', price: '2000', imageUrl: 'yeni.jpeg', description: 'iyi telefon', categoryid: "2"},
-    {id: "13217", name: 'Mikrodalga', price: '2000', imageUrl: 'yeni.jpeg', description: 'iyi telefon', categoryid: "3"}
-];
+// const connection = require('../utility/database');
 
-module.exports = class Product {
-    constructor(name, price, imageUrl, description, categoryid){
-        this.id = (Math.floor(Math.random()*99999)+1).toString();
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.categoryid = categoryid;
-    }
-    saveProduct() {
-        products.push(this);
-    }
-    static getAll() {
-        return products;
-    }
+// module.exports = class Product {
+//     constructor(name, price, imageUrl, description, categoryid){
+//         this.name = name;
+//         this.price = price;
+//         this.imageUrl = imageUrl;
+//         this.description = description;
+//         this.categoryid = categoryid;
+//     }
+//     saveProduct() {
+//         return connection.execute('INSERT INTO products (name, price, imageUrl, description, categoryid) VALUES (?, ?, ?, ?, ?)', 
+//         [this.name, this.price, this.imageUrl, this.description, this.categoryid])
+//     }
+//     static getAll() {
+//         return connection.execute('SELECT * FROM products'); // WHERE FİLİTRELERE YAPAR.
+//     }
 
-    static getById(id) {
-        const product = products.find(i=>i.id === id); // find eşleşen ilk ürünü geriye döndürür
-        return product;
-    }
-    static getProductsByCategoryId(categoryid){
-        const product = products.filter(i=>i.categoryid === categoryid); // filter eşleşen bütün ürünleri geriye döndürür.
-        return product;
-    }
+//     static getById(id) {
+//        return connection.execute('SELECT * FROM products WHERE products.id=?', [id]);
+//     }
+//     static getProductsByCategoryId(categoryid){
+       
+//     }
 
-    static Update(product) {
-        const index = products.findIndex(i=> i.id===product.id);
+//     static Update(product) {
+//        return connection.execute('UPDATE products SET products.name=?, products.price=?,products.imageUrl=?, products.description=?, products.categoryid=? WHERE products.id=?', 
+//         [product.name, product.price, product.imageUrl, product.description, product.categoryid,product.id])
+//     }
 
-        products[index].name = product.name;
-        products[index].price = product.price;
-        products[index].imageUrl = product.imageUrl;
-        products[index].description = product.description;
-        products[index].categoryid = product.categoryid;
-    }
+//     static DeleteById(id) {
+//         return connection.execute('DELETE FROM products WHERE id=?',[id]);
+//     }
+// }
 
-    static DeleteById(id) {
-        const index = products.findIndex(i=>i.id === id);
-        products.splice(index,1);
+// **************SEQUELİZE************
+const Sequelize= require('sequelize');
+const sequelize = require('../utility/database');
+
+const Product = sequelize.define('product',{
+    id:{
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    name: Sequelize.STRING,
+    price: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+    },
+    imageUrl: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    description: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
-}
+});
+
+module.exports = Product;

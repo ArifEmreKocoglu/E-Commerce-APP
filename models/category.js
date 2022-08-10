@@ -1,33 +1,49 @@
-const categories = [
-    {id: "1", name:"telefon", description:"telefon kategori ürünleri"},
-    {id: "2", name:"bilgisayar", description:"bilgisayar kategori ürünleri"},
-    {id: "3", name:"beyaz eşya", description:"beyaz eşya kategori ürünleri"},
-]
+// const connection = require('../utility/database');
 
-module.exports = class Category {
-    constructor(name, description) {
-        this.id = (categories.length + 1).toString();
-        this.name = name;
-        this.description = description;
-    }
 
-    saveCategory() {
-        categories.push(this);
-    }
+// module.exports = class Category {
+//     constructor(name, description) {
+//         this.id = (categories.length + 1).toString();
+//         this.name = name;
+//         this.description = description;
+//     }
 
-    static getAll () {
-        return categories;
+//     saveCategory() {
+//         return connection.execute('INSERT INTO categories(name, description) VALUES(?,?)', 
+//         [this.name, this.description]);
+//     }
+
+//     static getAll () {
+//         return connection.execute('SELECT * FROM categories');
+//     }
+//     static getById() {
+//         return connection.execute('SELECT * FROM categories WHERE id=?',[id]);
+//     }
+//     static update(category) {
+//         return connection.execute('UPDATE categories SET categories.name =?, categories.description=?',
+//         [category.name, category.description]);
+//     }
+//     static deleteById(id) {
+//         return connection.execute('DELETE FROM categories WHERE id=?', [id]);
+//     }
+// }
+
+// **************SEQUELİZE************
+const Sequelize= require('sequelize');
+const sequelize = require('../utility/database');
+
+const Category = sequelize.define('category', {
+    id:{
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    name: Sequelize.STRING,
+    description: {
+        type: Sequelize.STRING,
+        allowNull: true
     }
-    static getById() {
-        return categories.find(i=> i.id===id);
-    }
-    static update(category) {
-        const index = categories.findIndex(i=>i.id=== category.id);
-        categories[index].name = category.name
-        categories[index].description = category.description
-    }
-    static deleteById(id) {
-        const index = categories.findIndex(i => i.id == id);
-        categories.splice(index,1);
-    }
-}
+});
+
+module.exports = Category;
